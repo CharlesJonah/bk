@@ -23,11 +23,10 @@ api.add_resource(CreateBucketListItems, '/v1/bucketlists/<int:id>/items')
 api.add_resource(UpdateBucketListItem, '/v1/bucketlists/<int:id>/items/<int:item_id>')
 api.add_resource(DeleteBucketListItem, '/v1/bucketlists/<int:id>/items/<int:item_id>')
 api.add_resource(CreateBucketList, '/v1/bucketlists')
-# api.add_resource(SearchBucketLists, '/v1/bucketlists')
 api.add_resource(GetBucketList, '/v1/bucketlists/<int:id>')
 api.add_resource(UpdateBucketList, '/v1/bucketlists/<int:id>')
 api.add_resource(DeleteBucketList, '/v1/bucketlists/<int:id>')
 api.add_resource(UserLogin, '/v1/auth/login')
 
 if __name__ == '__main__':
-   app.run(debug = True, host='0.0.0.0', port=7000)
+   app.run(debug = True, host='127.0.0.1', port=5200)

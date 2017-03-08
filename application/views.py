@@ -44,17 +44,6 @@ class CreateBucketList(Resource):
 		except Exception as e:
 			return({'message': 'bad request'}, 400)
 
-# class GetBucketLists(Resource):
-# 	""" This class handles the retrieval of all created bucket list """
-
-# 	@auth.login_required
-# 	def get(self):
-# 		bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).all()	
-# 		if bucket_lists:
-# 			return({'bucketlists': marshal(bucket_lists, bucket_list_serializer)},200)
-# 		else:
-# 			return({'message':'not found' },400)
-
 class GetBucketLists(Resource):
 	""" This class handles the retrieval of all created bucket list """
 
@@ -68,7 +57,7 @@ class GetBucketLists(Resource):
 			bucket_lists = BucketListModel.query.filter(BucketListModel.name.ilike('%' + q + "%" )).filter_by(created_by=g.user.email).paginate(int(page), int(limit), False)
 			buckets = bucket_lists.items
 		else:
-			bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).paginate(int(page), int(limit), False).all()
+			bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).paginate(int(page), int(limit), False)
 			buckets = bucket_lists.items
 
 		if buckets:
@@ -102,7 +91,7 @@ class GetBucketList(Resource):
 			else:
 				return({'message': 'not found'}, 404)
 		except Exception as e:
-			return({'message': 'bad request'}, 400)
+			return({'message': 'bad request'}, 404)
 
 class DeleteBucketList(Resource):
 
@@ -171,10 +160,13 @@ class UpdateBucketListItem(Resource):
 				item = ItemsModel.query.filter_by(id = item_id ).first()
 				if item:
 					bucket_list_item = request.json
-					item.name = bucket_list_item["name"]
-					item.done = bucket_list_item["done"]
-					db.session.commit()
-					return({'message': 'ok'},200)
+					if bucket_list_item["name"] == "" or bucket_list_item["done"] == "":
+						return({'message': 'bad request'},400)
+					else:
+						item.name = bucket_list_item["name"]
+						item.done = bucket_list_item["done"]
+						db.session.commit()
+						return({'message': 'ok'},200)
 				else:
 					return ({'message': 'the bucketlist item does not exist'}, 404)
 
